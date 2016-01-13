@@ -11,11 +11,6 @@ module.exports = React.createClass({
       menuItems: [{ uid: 'All' }, { uid: 'Active' }, { uid: 'Complete' }]
     };
   },
-  getInitialState: function getInitialState() {
-    return {
-      activeMenuItem: 'All'
-    };
-  },
   render: function render() {
     var _this = this;
 
@@ -25,7 +20,7 @@ module.exports = React.createClass({
         { key: i },
         React.createElement(
           'a',
-          { className: _this.state.activeMenuItem === item.uid ? 'active menu-item' : 'inactive menu-item', onClick: _this.sortItems, href: '#' },
+          { className: _this.props.activeMenuItem === item.uid ? 'active menu-item' : 'inactive menu-item', onClick: _this.props.setSortItems, href: '#' },
           item.uid
         )
       );
@@ -39,10 +34,6 @@ module.exports = React.createClass({
         menuItems
       )
     );
-  },
-  sortItems: function sortItems(e) {
-    e.preventDefault();
-    this.setState({ activeMenuItem: e.target.text });
   }
 });
 
@@ -53,11 +44,15 @@ var React = require('react');
 module.exports = React.createClass({
   displayName: 'exports',
 
+  getInitialState: function getInitialState() {
+    return {
+      complete: false
+    };
+  },
   render: function render() {
     var completeClass = '';
-    console.log(this.props);
-    if (this.props.complete === false) {
-      completeClass = 'incomplete';
+    if (this.state.complete === false) {
+      completeClass = 'active';
     } else {
       completeClass = 'complete';
     }
@@ -66,11 +61,18 @@ module.exports = React.createClass({
       { className: 'whats-new' },
       React.createElement(
         'label',
-        { onClick: this.props.onClick, className: completeClass },
+        { onClick: this.toggleTodo, className: completeClass },
         React.createElement('input', { type: 'checkbox' }),
         this.props.text
       )
     );
+  },
+  toggleTodo: function toggleTodo(e) {
+    var newState = !this.state.complete;
+    this.setState({
+      complete: newState
+    });
+    this.props.toggleTodo({ todo: this.props.text, complete: newState, id: this.props.id });
   }
 });
 
@@ -86,21 +88,20 @@ module.exports = React.createClass({
   getInitialState: function getInitialState() {
     return {
       list: [],
+      sort: [],
       filter: '',
-      complete: false
+      complete: false,
+      activeMenuItem: 'All'
     };
   },
   render: function render() {
     var _this = this;
 
-    console.log(this.state);
-    console.log(this.state.filter);
-    console.log(Footer);
-
-    var listHTML = this.state.list.filter(function (item, i) {
-      return item.indexOf(_this.state.filter) > -1;
-    }).map(function (item, i) {
-      return React.createElement(Item, { key: i, onClick: _this.toggleTodo, text: item, complete: _this.state.complete });
+    var baseHTML = this.state.list.filter(function (item, i) {
+      return item.todo.indexOf(_this.state.filter) > -1;
+    });
+    var listHTML = baseHTML.map(function (item, i) {
+      return React.createElement(Item, { key: i, id: i, toggleTodo: _this.toggleTodo, text: item.todo });
     });
     return React.createElement(
       'section',
@@ -130,24 +131,41 @@ module.exports = React.createClass({
         null,
         listHTML
       ),
-      React.createElement(Footer, null)
+      React.createElement(Footer, { activeMenuItem: this.state.activeMenuItem, setSortItems: this.setSortItems, list: this.state.list, complete: this.state.complete })
     );
   },
   itemFilter: function itemFilter(e) {
     this.setState({ filter: e.target.value });
-    console.log(this.state.filter);
   },
   newTodo: function newTodo(e) {
     e.preventDefault();
-    this.state.list.push(this.refs.todoInput.value);
+    this.state.list.push({ todo: this.refs.todoInput.value, complete: false });
     this.setState(this.state);
     this.refs.todoInput.value = '';
   },
-  toggleTodo: function toggleTodo() {
+  toggleTodo: function toggleTodo(e) {
+    var todo = e.todo;
+    var complete = e.complete;
+    var id = e.id;
+
+    this.state.list[id].todo = todo;
+    this.state.list[id].complete = complete;
     this.setState({
-      complete: !this.state.complete
+      list: this.state.list
     });
-    console.log(this.state.complete);
+  },
+  setSortItems: function setSortItems(e) {
+    e.preventDefault();
+    this.setState({ activeMenuItem: e.target.text });
+    this.sortItems(e.target.text);
+  },
+  sortItems: function sortItems(e) {
+    var _this2 = this;
+
+    var baseHTML = this.state.list.filter(function (item, i) {
+      return item.indexOf(_this2.state.filter) > -1;
+    });
+    console.log(this.state.list);
   }
 });
 

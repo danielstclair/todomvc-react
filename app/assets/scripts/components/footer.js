@@ -10,15 +10,10 @@ module.exports = React.createClass({
       ]
     }
   },
-  getInitialState: function(){
-    return{
-      activeMenuItem: 'All'
-    };
-  },
   render:function(){
     let menuItems = this.props.menuItems.map((item, i) =>{
       return (
-        <li key={i}><a className={this.state.activeMenuItem === item.uid ? 'active menu-item' : 'inactive menu-item'} onClick={this.sortItems} href="#">{item.uid}</a></li>
+        <li key={i}><a className={this.props.activeMenuItem === item.uid ? 'active menu-item' : 'inactive menu-item'} onClick={this.props.setSortItems} href="#">{item.uid}</a></li>
       )
     });
     return (
@@ -28,9 +23,5 @@ module.exports = React.createClass({
         </ul>
       </footer>
     )
-  },
-  sortItems: function(e){
-    e.preventDefault();
-    this.setState({activeMenuItem: e.target.text});
   }
 })
