@@ -5,7 +5,8 @@ module.exports = React.createClass({
   getInitialState: function(){
     return {
       list: [],
-      filter: ''
+      filter: '',
+      complete: false
     }
   },
   render: function(){
@@ -16,7 +17,7 @@ module.exports = React.createClass({
     let listHTML = this.state.list.filter((item, i) =>{
       return item.indexOf(this.state.filter) > -1;
     }).map((item, i) =>{
-      return <Item key={i} text={item} />
+      return <Item key={i} onClick={this.toggleTodo} text={item} complete={this.state.complete} />
     });
     return(
       <section>
@@ -44,5 +45,11 @@ module.exports = React.createClass({
     this.state.list.push(this.refs.todoInput.value);
     this.setState(this.state);
     this.refs.todoInput.value = '';
+  },
+  toggleTodo: function(){
+    this.setState({
+      complete: !this.state.complete
+    })
+    console.log(this.state.complete);
   }
 })

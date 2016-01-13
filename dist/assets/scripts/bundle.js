@@ -53,14 +53,10 @@ var React = require('react');
 module.exports = React.createClass({
   displayName: 'exports',
 
-  getInitialState: function getInitialState() {
-    return {
-      complete: false
-    };
-  },
   render: function render() {
     var completeClass = '';
-    if (this.state.complete === false) {
+    console.log(this.props);
+    if (this.props.complete === false) {
       completeClass = 'incomplete';
     } else {
       completeClass = 'complete';
@@ -70,17 +66,11 @@ module.exports = React.createClass({
       { className: 'whats-new' },
       React.createElement(
         'label',
-        { onClick: this.toggleTodo, className: completeClass },
+        { onClick: this.props.onClick, className: completeClass },
         React.createElement('input', { type: 'checkbox' }),
         this.props.text
       )
     );
-  },
-  toggleTodo: function toggleTodo() {
-    this.setState({
-      complete: !this.state.complete
-    });
-    console.log(this.state);
   }
 });
 
@@ -96,7 +86,8 @@ module.exports = React.createClass({
   getInitialState: function getInitialState() {
     return {
       list: [],
-      filter: ''
+      filter: '',
+      complete: false
     };
   },
   render: function render() {
@@ -109,7 +100,7 @@ module.exports = React.createClass({
     var listHTML = this.state.list.filter(function (item, i) {
       return item.indexOf(_this.state.filter) > -1;
     }).map(function (item, i) {
-      return React.createElement(Item, { key: i, text: item });
+      return React.createElement(Item, { key: i, onClick: _this.toggleTodo, text: item, complete: _this.state.complete });
     });
     return React.createElement(
       'section',
@@ -151,6 +142,12 @@ module.exports = React.createClass({
     this.state.list.push(this.refs.todoInput.value);
     this.setState(this.state);
     this.refs.todoInput.value = '';
+  },
+  toggleTodo: function toggleTodo() {
+    this.setState({
+      complete: !this.state.complete
+    });
+    console.log(this.state.complete);
   }
 });
 

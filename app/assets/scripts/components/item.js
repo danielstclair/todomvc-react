@@ -1,13 +1,9 @@
 let React = require('react');
 module.exports = React.createClass({
-  getInitialState: function(){
-    return {
-      complete: false
-    }
-  },
   render: function(){
     let completeClass = '';
-    if(this.state.complete === false){
+    console.log(this.props);
+    if(this.props.complete === false){
       completeClass = 'incomplete';
     } 
     else{
@@ -15,17 +11,11 @@ module.exports = React.createClass({
     }
     return (
       <li className="whats-new">
-        <label onClick={this.toggleTodo} className={completeClass}>
+        <label onClick={this.props.onClick} className={completeClass}>
           <input type="checkbox" />
           {this.props.text}
         </label>
       </li>
     )
-  },
-  toggleTodo: function(){
-    this.setState({
-      complete: !this.state.complete
-    })
-    console.log(this.state);
   }
 })
