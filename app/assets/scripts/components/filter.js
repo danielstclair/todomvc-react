@@ -2,18 +2,18 @@ let React = require('react');
 module.exports = React.createClass({
   getInitialState: function(){
     return {
-      this.props.filter
+      filter: ''
     }
   },
   render: function(){
     return (
       <div>
-        <input type="text" placeholder="filter" onKeyUp={this.itemFilter} />
+        <input className="todo-text" type="text" placeholder="filter" onKeyUp={this.itemFilter} />
       </div>
     );
   },
   itemFilter: function(e){
-    this.setState({filter:e.target.value});
-    // console.log(this.state.filter);
+    this.setState({filter: e.target.value});
+    this.props.itemFilter(e);
   }
 });

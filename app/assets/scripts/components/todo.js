@@ -1,6 +1,7 @@
 let React = require('react');
 let Item = require('./item');
 let Footer = require('./footer');
+let Filter = require('./filter');
 module.exports = React.createClass({
   getInitialState: function(){
     return {
@@ -25,9 +26,7 @@ module.exports = React.createClass({
           <input className="todo-text" ref="todoInput" type="text" placeholder="Type your todos here" />
           <button>Add</button>
         </form>
-        <div>
-          <input className="todo-text" onKeyUp={this.itemFilter} placeholder="filter" type="text" />
-        </div>
+        <Filter itemFilter={this.itemFilter} filter={this.state.filter} />
         <ul>
           {listHTML}
         </ul>
@@ -40,27 +39,31 @@ module.exports = React.createClass({
   },
   newTodo: function(e){
     e.preventDefault();
-    this.state.list.push({todo: this.refs.todoInput.value, complete: false});
+    let id = this.state.list.length;
+    this.state.list.push({todo: this.refs.todoInput.value, complete: false, id: id});
     this.setState(this.state);
     this.refs.todoInput.value = '';
   },
   toggleTodo: function(e){
     let {todo, complete, id} = e;
-    this.state.list[id].todo = todo;
-    this.state.list[id].complete = complete;
+    let thisTodo = this.state.list.filter((item, i) => {
+      return item.id === id;
+    })
+    thisTodo[0].complete = complete;
     this.setState({
       list : this.state.list
     })
+    console.log(this.state.list);
   },
   setSortItems: function(e){
     e.preventDefault();
     this.setState({activeMenuItem: e.target.text});
     this.sortItems(e.target.text);
-  },
-  sortItems: function(e){
-    let baseHTML = this.state.list.filter((item, i) => {
-      return item.indexOf(this.state.filter) > -1;
-    });
-    console.log(this.state.list);
   }
+  // sortItems: function(e){
+  //   let baseHTML = this.state.list.filter((item, i) => {
+  //     return item.indexOf(this.state.filter) > -1;
+  //   });
+  //   console.log(this.state.list);
+  // }
 })
