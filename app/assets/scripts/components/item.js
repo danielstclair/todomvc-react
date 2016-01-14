@@ -8,14 +8,14 @@ module.exports = React.createClass({
   render: function(){
     let completeClass = '';
     if(this.state.complete === false){
-      completeClass = 'active';
+      completeClass = 'incomplete todos';
     } 
     else{
-      completeClass = 'complete';
+      completeClass = 'complete todos';
     }
     return (
-      <li className="whats-new">
-        <label onClick={this.toggleTodo} className={completeClass}>
+      <li className={completeClass}>
+        <label onClick={this.toggleTodo}>
           <input type="checkbox" />
           {this.props.text}
         </label>

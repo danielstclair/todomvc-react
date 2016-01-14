@@ -48,6 +48,22 @@ a:hover,
 ul{
   list-style: none;
   padding: 0;
+}
+
+.todos{
+  background-color:#fff;
+  border: 1px solid #000;
+  border-radius: 3px;
+  padding: 0.5em 1.5em;
+  margin-bottom: 0.5em;
+  // text-align: center;
+}
+
+.hidden{
+  display: none;
+}
+
+footer{
   li{
     display: inline-block;
     margin-right: 1em;
@@ -68,7 +84,7 @@ section{
     border-bottom: 1px solid #000;
     height: 1.8em;
     font-size: 1.2em;
-    margin-bottom: 2em;
+    margin-bottom: 1em;
     outline: none;
     padding: 0;
     &:focus{
@@ -79,7 +95,7 @@ section{
   button{
     background-color: transparent;
     border: none;
-    border: 1px solid green;
+    border: 1px solid #25C425;
     border-radius: 3px;
     font-size: 1em;
     font-weight: 300;
@@ -89,4 +105,13 @@ section{
 }
 .active{
   text-decoration: underline;
+}
+.complete{
+  background-color: #25C425;
+  color: white;
+  border-color: #25C425;
+  * {
+    // text-decoration: line-through;
+
+  }
 }

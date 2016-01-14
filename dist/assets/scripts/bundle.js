@@ -52,16 +52,16 @@ module.exports = React.createClass({
   render: function render() {
     var completeClass = '';
     if (this.state.complete === false) {
-      completeClass = 'active';
+      completeClass = 'incomplete todos';
     } else {
-      completeClass = 'complete';
+      completeClass = 'complete todos';
     }
     return React.createElement(
       'li',
-      { className: 'whats-new' },
+      { className: completeClass },
       React.createElement(
         'label',
-        { onClick: this.toggleTodo, className: completeClass },
+        { onClick: this.toggleTodo },
         React.createElement('input', { type: 'checkbox' }),
         this.props.text
       )
