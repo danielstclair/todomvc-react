@@ -32,7 +32,7 @@ h2 {
 
 a,
 .link {
-  color: #9f3c3c;
+  color: #DE0000;
   font-weight: 500;
   cursor: pointer;
   text-decoration: none;
@@ -56,11 +56,22 @@ ul{
   border-radius: 3px;
   padding: 0.5em 1.5em;
   margin-bottom: 0.5em;
-  // text-align: center;
 }
 
 .hidden{
   display: none;
+}
+
+.counter{
+  font-size: 0.6em;
+  float: right;
+  margin-left: 0.2em;
+  margin-top: -0.3em;
+  padding: 0 0.4em;
+  border: 1px solid #DE0000;
+  background-color: #DE0000;
+  color: white;
+  border-radius: 50%;
 }
 
 footer{
@@ -110,8 +121,4 @@ section{
   background-color: #25C425;
   color: white;
   border-color: #25C425;
-  * {
-    // text-decoration: line-through;
-
-  }
 }
