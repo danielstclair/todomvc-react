@@ -6,18 +6,28 @@ module.exports = React.createClass({
   getInitialState: function(){
     return {
       list: [],
-      sort: [],
       filter: '',
-      complete: false,
       activeMenuItem: 'All'
     }
   },
   render: function(){
-    let baseHTML = this.state.list.filter((item, i) => {
+    let filteredList = this.state.list.filter((item, i) => {
       return item.todo.indexOf(this.state.filter) > -1;
     });
-    let listHTML = baseHTML.map((item, i) =>{
-      return <Item key={i} id={i} toggleTodo={this.toggleTodo} text={item.todo} />
+    let sortedList = filteredList.filter((item, i) => {
+      let realItem = item;
+      if(this.state.activeMenuItem === "Complete"){
+        return item.complete == true;
+      } 
+      else if(this.state.activeMenuItem === "Active"){
+        return item.complete === false;
+      } 
+      else{
+        return true;
+      }
+    })
+    let listHTML = sortedList.map((item, i) =>{
+      return <Item key={i} item={item} toggleTodo={this.toggleTodo} />
     });
     return(
       <section>
@@ -44,26 +54,20 @@ module.exports = React.createClass({
     this.setState(this.state);
     this.refs.todoInput.value = '';
   },
-  toggleTodo: function(e){
-    let {todo, complete, id} = e;
-    let thisTodo = this.state.list.filter((item, i) => {
-      return item.id === id;
-    })
-    thisTodo[0].complete = complete;
-    this.setState({
-      list : this.state.list
-    })
-    console.log(this.state.list);
+  toggleTodo: function(id){
+    return (e) => {
+      let thisTodo = this.state.list.filter((item, i) => {
+        return item.id === id;
+      })
+      thisTodo[0].complete = !thisTodo[0].complete;
+      this.setState({
+        list : this.state.list
+      })
+    }
   },
   setSortItems: function(e){
     e.preventDefault();
-    this.setState({activeMenuItem: e.target.text});
-    this.sortItems(e.target.text);
+    this.setState({activeMenuItem: e.target.textContent});
+    this.sortItems(e.target.textContent);
   }
-  // sortItems: function(e){
-  //   let baseHTML = this.state.list.filter((item, i) => {
-  //     return item.indexOf(this.state.filter) > -1;
-  //   });
-  //   console.log(this.state.list);
-  // }
 })

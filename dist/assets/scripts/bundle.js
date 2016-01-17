@@ -103,14 +103,14 @@ var React = require('react');
 module.exports = React.createClass({
   displayName: 'exports',
 
-  getInitialState: function getInitialState() {
-    return {
-      complete: false
-    };
-  },
   render: function render() {
+    var _props$item = this.props.item;
+    var todo = _props$item.todo;
+    var complete = _props$item.complete;
+    var id = _props$item.id;
+
     var completeClass = '';
-    if (this.state.complete === false) {
+    if (complete === false) {
       completeClass = 'incomplete todos';
     } else {
       completeClass = 'complete todos';
@@ -120,18 +120,11 @@ module.exports = React.createClass({
       { className: completeClass },
       React.createElement(
         'label',
-        { onClick: this.toggleTodo },
-        React.createElement('input', { type: 'checkbox' }),
-        this.props.text
+        { onClick: this.props.toggleTodo(id) },
+        React.createElement('input', { type: 'checkbox', checked: complete }),
+        todo
       )
     );
-  },
-  toggleTodo: function toggleTodo(e) {
-    var newState = !this.state.complete;
-    this.setState({
-      complete: newState
-    });
-    this.props.toggleTodo({ todo: this.props.text, complete: newState, id: this.props.id });
   }
 });
 
@@ -148,20 +141,28 @@ module.exports = React.createClass({
   getInitialState: function getInitialState() {
     return {
       list: [],
-      sort: [],
       filter: '',
-      complete: false,
       activeMenuItem: 'All'
     };
   },
   render: function render() {
     var _this = this;
 
-    var baseHTML = this.state.list.filter(function (item, i) {
+    var filteredList = this.state.list.filter(function (item, i) {
       return item.todo.indexOf(_this.state.filter) > -1;
     });
-    var listHTML = baseHTML.map(function (item, i) {
-      return React.createElement(Item, { key: i, id: i, toggleTodo: _this.toggleTodo, text: item.todo });
+    var sortedList = filteredList.filter(function (item, i) {
+      var realItem = item;
+      if (_this.state.activeMenuItem === "Complete") {
+        return item.complete == true;
+      } else if (_this.state.activeMenuItem === "Active") {
+        return item.complete === false;
+      } else {
+        return true;
+      }
+    });
+    var listHTML = sortedList.map(function (item, i) {
+      return React.createElement(Item, { key: i, item: item, toggleTodo: _this.toggleTodo });
     });
     return React.createElement(
       'section',
@@ -200,31 +201,24 @@ module.exports = React.createClass({
     this.setState(this.state);
     this.refs.todoInput.value = '';
   },
-  toggleTodo: function toggleTodo(e) {
-    var todo = e.todo;
-    var complete = e.complete;
-    var id = e.id;
+  toggleTodo: function toggleTodo(id) {
+    var _this2 = this;
 
-    var thisTodo = this.state.list.filter(function (item, i) {
-      return item.id === id;
-    });
-    thisTodo[0].complete = complete;
-    this.setState({
-      list: this.state.list
-    });
-    console.log(this.state.list);
+    return function (e) {
+      var thisTodo = _this2.state.list.filter(function (item, i) {
+        return item.id === id;
+      });
+      thisTodo[0].complete = !thisTodo[0].complete;
+      _this2.setState({
+        list: _this2.state.list
+      });
+    };
   },
   setSortItems: function setSortItems(e) {
     e.preventDefault();
-    this.setState({ activeMenuItem: e.target.text });
-    this.sortItems(e.target.text);
+    this.setState({ activeMenuItem: e.target.textContent });
+    this.sortItems(e.target.textContent);
   }
-  // sortItems: function(e){
-  //   let baseHTML = this.state.list.filter((item, i) => {
-  //     return item.indexOf(this.state.filter) > -1;
-  //   });
-  //   console.log(this.state.list);
-  // }
 });
 
 },{"./filter":2,"./footer":3,"./item":4,"react":164}],6:[function(require,module,exports){
